@@ -1,12 +1,14 @@
 package gui;
 
 import javax.swing.*;
+import model.Participante;
+import repository.ParticipanteRepository;
 import main.EscolherForma;
 
 public class TelaLoginParticipante extends JFrame {
-    JTextField txtLogin;
-    JPasswordField txtSenha;
-    JButton btnLogin, btnCancelar;
+    private JTextField txtLogin;
+    private JPasswordField txtSenha;
+    private JButton btnLogin, btnCancelar;
 
     public TelaLoginParticipante() {
         setTitle("Login - Participante");
@@ -40,15 +42,26 @@ public class TelaLoginParticipante extends JFrame {
         btnCancelar.setBounds(160,110,100,30);
         add(btnCancelar);
 
+        ParticipanteRepository repo = new ParticipanteRepository();
+
         btnLogin.addActionListener(e -> {
-            dispose();
-            TelaInicialParticipante telaInicial = new TelaInicialParticipante();
-            telaInicial.setVisible(true);
+            String login = txtLogin.getText();
+            String senha = new String(txtSenha.getPassword());
+
+            Participante participante = repo.buscarPorLogin(login);
+
+            if (participante != null && participante.getSenha().equals(senha)) {
+                JOptionPane.showMessageDialog(this, "Login realizado com sucesso!");
+                // Abre tela inicial do participante passando o objeto participante
+                new TelaInicialParticipante(participante).setVisible(true);
+                dispose();
+            } else {
+                JOptionPane.showMessageDialog(this, "Login ou senha incorretos!");
+            }
         });
 
         btnCancelar.addActionListener(e -> {
-            EscolherForma escolherForma = new EscolherForma();
-            escolherForma.setVisible(true);
+            new EscolherForma().setVisible(true);
             dispose();
         });
     }

@@ -2,39 +2,55 @@ package gui;
 
 import javax.swing.*;
 import java.awt.*;
+import model.Palestra;
+import model.Participante;
+import java.time.format.DateTimeFormatter; 
 
 public class TelaInformacoesParticipante extends JFrame {
-    private JLabel lblNome, lblData, lblQtdParticipantes;
-    private JButton btnCancelarInscricao, btnFechar;
 
-    public TelaInformacoesParticipante() {
+    private final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+
+    public TelaInformacoesParticipante(Palestra palestra, Participante participante) {
         setTitle("Informações da Palestra");
-        setSize(400, 250);
-        setLayout(new GridLayout(5, 1, 10, 10));
+        setSize(400, 350); 
+        setLayout(new BorderLayout(10,10));
         setLocationRelativeTo(null);
-        setDefaultCloseOperation(DISPOSE_ON_CLOSE);
         setResizable(false);
 
-        lblNome = new JLabel("Palestra: Nome da Palestra", JLabel.CENTER);
-        lblNome.setFont(new Font("Arial", Font.BOLD, 16));
-        lblData = new JLabel("Data: 00/00/0000", JLabel.CENTER);
-        lblQtdParticipantes = new JLabel("Participantes inscritos: 0", JLabel.CENTER);
+        JTextArea info = new JTextArea();
+        info.setEditable(false);
+        info.setFont(new Font("Arial", Font.PLAIN, 14)); 
 
-        btnCancelarInscricao = new JButton("Cancelar Inscrição");
-        btnFechar = new JButton("Fechar");
+        StringBuilder sb = new StringBuilder();
+        
+        sb.append("--- Detalhes da Palestra ---\n\n");
+        sb.append("ID: ").append(palestra.getId()).append("\n");
+        sb.append("Palestra: ").append(palestra.getNome()).append("\n");
+        sb.append("Evento: ").append(palestra.getEvento()).append("\n");
+        
+        sb.append("Data: ").append(palestra.getData().format(formatter)).append("\n");
+        
+        if (palestra.getPalestrante() != null) {
+             sb.append("Palestrante: ").append(palestra.getPalestrante().getNome()).append("\n\n");
+        } else {
+             sb.append("Palestrante: A ser definido\n\n");
+        }
+       
+        int totalParticipantes = palestra.getParticipantes() != null ? palestra.getParticipantes().size() : 0;
+        sb.append("Total de Participantes Inscritos: ").append(totalParticipantes).append("\n");
+        
+        // Exibe o status da inscrição para o participante logado (apenas como informação extra)
+        boolean inscrito = palestra.getParticipantes() != null && palestra.getParticipantes().contains(participante);
+        sb.append("Status de Inscrição: ").append(inscrito ? "Inscrito(a) ✅" : "Não Inscrito(a) ❌").append("\n");
+        
+        info.setText(sb.toString());
+        add(new JScrollPane(info), BorderLayout.CENTER);
 
-        add(lblNome);
-        add(lblData);
-        add(lblQtdParticipantes);
-        add(btnCancelarInscricao);
-        add(btnFechar);
-
-        btnCancelarInscricao.addActionListener(e -> 
-            JOptionPane.showMessageDialog(this, "teste1")
-        );
-
-        btnFechar.addActionListener(e -> 
-            JOptionPane.showMessageDialog(this, "teste2") 
-        );
+        JButton btnFechar = new JButton("Fechar");
+        btnFechar.addActionListener(e -> dispose());
+        
+        JPanel painelRodape = new JPanel(new FlowLayout(FlowLayout.CENTER));
+        painelRodape.add(btnFechar);
+        add(painelRodape, BorderLayout.SOUTH);
     }
 }

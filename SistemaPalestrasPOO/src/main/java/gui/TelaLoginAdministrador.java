@@ -1,7 +1,9 @@
 package gui;
 
-import java.awt.FlowLayout;
 import javax.swing.*;
+import java.awt.*;
+import model.Administrador;
+import repository.AdministradorRepository;
 import main.EscolherEntrada;
 
 public class TelaLoginAdministrador extends JFrame {
@@ -14,7 +16,6 @@ public class TelaLoginAdministrador extends JFrame {
         setSize(300, 220);
         setLayout(null);
         setResizable(false);
-
         setLocationRelativeTo(null);
         setDefaultCloseOperation(DISPOSE_ON_CLOSE);
 
@@ -55,7 +56,10 @@ public class TelaLoginAdministrador extends JFrame {
             String login = txtLogin.getText();
             String senha = new String(txtSenha.getPassword());
 
-            if (login.equals("admin") && senha.equals("12345678")) {
+            AdministradorRepository repo = new AdministradorRepository();
+            Administrador admin = repo.buscarPorLogin(login);
+
+            if (admin != null && admin.getSenha().equals(senha)) {
                 JOptionPane.showMessageDialog(null, "Login de administrador realizado com sucesso!");
                 dispose();
                 new TelaAdministrador().setVisible(true);

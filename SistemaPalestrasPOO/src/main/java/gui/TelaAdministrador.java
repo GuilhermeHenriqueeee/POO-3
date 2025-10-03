@@ -1,8 +1,5 @@
 package gui;
 
-import gui.TelaManterPalestrantes;
-import gui.TelaManterPalestras;
-
 import javax.swing.*;
 import java.awt.*;
 import main.EscolherEntrada;
@@ -29,20 +26,12 @@ public class TelaAdministrador extends JFrame {
         add(btnPalestrantes);
         add(btnPalestras);
         add(btnSair);
-        
-        btnPalestrantes.addActionListener(e -> {
-            new TelaManterPalestrantes().setVisible(true);
-        });
 
-        btnPalestras.addActionListener(e -> {
-            new TelaManterPalestras().setVisible(true);
-        });
-
+        btnPalestrantes.addActionListener(e -> new TelaManterPalestrantes().setVisible(true));
+        btnPalestras.addActionListener(e -> new TelaManterPalestras().setVisible(true));
         btnSair.addActionListener(e -> {
-            EscolherEntrada escolherEntrada = new EscolherEntrada();
-            this.dispose();
+            new EscolherEntrada().setVisible(true);
+            dispose();
         });
     }
 }
-
-    

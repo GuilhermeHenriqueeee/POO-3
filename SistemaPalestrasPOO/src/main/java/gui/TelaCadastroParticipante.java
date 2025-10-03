@@ -1,6 +1,8 @@
 package gui;
 
 import javax.swing.*;
+import model.Participante;
+import repository.ParticipanteRepository;
 import main.EscolherForma;
 
 public class TelaCadastroParticipante extends JFrame {
@@ -48,15 +50,26 @@ public class TelaCadastroParticipante extends JFrame {
         btnCancelar.setBounds(160,150,100,30);
         add(btnCancelar);
 
-        btnCadastrar.addActionListener(e -> 
-            JOptionPane.showMessageDialog(this, "teste1")
-        );
+        btnCadastrar.addActionListener(e -> {
+            String nome = txtNome.getText();
+            String login = txtLogin.getText();
+            String senha = new String(txtSenha.getPassword());
+
+            if(nome.isBlank() || login.isBlank() || senha.length()<8){
+                JOptionPane.showMessageDialog(this, "Preencha todos os campos (senha ≥ 8 caracteres)!");
+                return;
+            }
+
+            Participante p = new Participante(nome, login, senha);
+            new ParticipanteRepository().cadastrar(p);
+            JOptionPane.showMessageDialog(this, "Participante cadastrado com sucesso!");
+            this.dispose();
+            EscolherForma escolherForma = new EscolherForma();
+        });
 
         btnCancelar.addActionListener(e -> {
-            EscolherForma escolherForma = new EscolherForma();
-            escolherForma.setVisible(true);
+            new EscolherForma().setVisible(true);
             this.dispose();
         });
     }
-
 }
